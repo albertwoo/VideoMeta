@@ -38,19 +38,30 @@ public class ThemeService : IThemeService
             .Where(x => !x.IsDeleted)
             .Where(x => req.Name == null || x.Name.ToLower().Contains(req.Name.ToLower()));
 
-        var items = await query
-            .Skip(req.PageSize * (int)req.Page)
-            .Take(req.PageSize)
-            .Select(x => new ThemeItem(x))
-            .ToListAsync();
-
         var totalCount = await query.LongCountAsync();
+
+        if (totalCount > 0)
+        {
+            var items = await query
+                .OrderBy(x => x.CreatedTime)
+                .Skip(req.PageSize * (int)req.Page)
+                .Take(req.PageSize)
+                .Select(x => new ThemeItem(x))
+                .ToListAsync();
+
+            return new(
+                PageSize: req.PageSize,
+                Page: req.Page,
+                TotalCount: totalCount,
+                Items: items
+            );
+        }
 
         return new(
             PageSize: req.PageSize,
             Page: req.Page,
             TotalCount: totalCount,
-            Items: items
+            Items: new List<ThemeItem>()
         );
     }
 }

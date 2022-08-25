@@ -57,19 +57,30 @@ public class VideoMetaService : IVideoMetaService
             .Where(x => req.Description == null || x.Description.ToLower().Contains(req.Description.ToLower()))
             .Where(x => req.ThemeId == null || x.ThemeId == req.ThemeId);
 
-        var items = await query
-            .Skip(req.PageSize * (int)req.Page)
-            .Take(req.PageSize)
-            .Select(x => new VideoMetaItem(x))
-            .ToListAsync();
-
         var totalCount = await query.LongCountAsync();
 
-        return new VideoMetaResp(
+        if (totalCount > 0)
+        {
+            var items = await query
+                .OrderBy(x => x.CreatedTime)
+                .Skip(req.PageSize * (int)req.Page)
+                .Take(req.PageSize)
+                .Select(x => new VideoMetaItem(x))
+                .ToListAsync();
+
+            return new (
+                PageSize: req.PageSize,
+                Page: req.Page,
+                TotalCount: totalCount,
+                Items: items
+            );
+        }
+
+        return new (
             PageSize: req.PageSize,
             Page: req.Page,
             TotalCount: totalCount,
-            Items: items
+            Items: new List<VideoMetaItem>()
         );
     }
 }
