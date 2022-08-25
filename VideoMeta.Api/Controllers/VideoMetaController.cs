@@ -9,10 +9,16 @@ using VideoMeta.Api.Services;
 [Route("/api/v1/videometas")]
 public class VideoMetaController : ControllerBase
 {
+    private readonly IVideoMetaService videoMetaService;
+
+    public VideoMetaController(IVideoMetaService videoMetaService)
+    {
+        this.videoMetaService = videoMetaService;
+    }
+
+
     [HttpGet]
-    public async Task<VideoMetaResp> GetVideoMetas(
-        [FromServices] IVideoMetaService videoMetaService,
-        [FromQuery] VideoMetaReq req)
+    public async Task<VideoMetaResp> GetVideoMetas([FromQuery] VideoMetaReq req)
     {
         return await videoMetaService.GetVideoMetas(req);
     }
@@ -20,9 +26,7 @@ public class VideoMetaController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(200, Type = typeof(VideoMetaItem))]
-    public async Task<IActionResult> GetVideoMeta(
-        Guid id,
-        [FromServices] IVideoMetaService videoMetaService)
+    public async Task<IActionResult> GetVideoMeta(Guid id)
     {
         var data = await videoMetaService.GetVideoMeta(id);
 

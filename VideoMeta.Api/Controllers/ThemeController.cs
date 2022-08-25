@@ -9,10 +9,16 @@ using VideoMeta.Api.Services;
 [Route("/api/v1/themes")]
 public class ThemesController : ControllerBase
 {
+    private readonly IThemeService themeService;
+
+    public ThemesController(IThemeService themeService)
+    {
+        this.themeService = themeService;
+    }
+
+
     [HttpGet]
-    public async Task<ThemeResp> GetThemes(
-        [FromServices] IThemeService themeService,
-        [FromQuery] ThemeReq req)
+    public async Task<ThemeResp> GetThemes([FromQuery] ThemeReq req)
     {
         return await themeService.GetThemes(req);
     }
@@ -20,9 +26,7 @@ public class ThemesController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(200, Type = typeof(ThemeItem))]
-    public async Task<IActionResult> GetTheme(
-        Guid id,
-        [FromServices] IThemeService themeService)
+    public async Task<IActionResult> GetTheme(Guid id)
     {
         var data = await themeService.GetTheme(id);
 

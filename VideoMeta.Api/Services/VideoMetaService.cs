@@ -23,7 +23,7 @@ public class VideoMetaService : IVideoMetaService
 
     public async Task<VideoMetaItem?> GetVideoMeta(Guid id)
     {
-        var meta = await db.VideoMetas
+        var meta = await db.VideoMetas.AsNoTracking()
             .Where(x => !x.IsDeleted && x.Id == id)
             .FirstOrDefaultAsync();
 
@@ -35,7 +35,7 @@ public class VideoMetaService : IVideoMetaService
     {
         if (req.ThemeId != null)
         {
-            var theme = await db.Themes
+            var theme = await db.Themes.AsNoTracking()
                 .Where(x => x.Id == req.ThemeId)
                 .Select(x => new { x.IsDeleted })
                 .FirstOrDefaultAsync();
@@ -51,7 +51,7 @@ public class VideoMetaService : IVideoMetaService
             }
         }
 
-        var query = db.VideoMetas
+        var query = db.VideoMetas.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Where(x => req.Title == null || x.Title.ToLower().Contains(req.Title.ToLower()))
             .Where(x => req.Description == null || x.Description.ToLower().Contains(req.Description.ToLower()))

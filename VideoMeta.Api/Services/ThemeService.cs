@@ -24,7 +24,7 @@ public class ThemeService : IThemeService
 
     public async Task<ThemeItem?> GetTheme(Guid id)
     {
-        var theme = await db.Themes
+        var theme = await db.Themes.AsNoTracking()
             .Where(x => !x.IsDeleted && x.Id == id)
             .FirstOrDefaultAsync();
 
@@ -34,7 +34,7 @@ public class ThemeService : IThemeService
 
     public async Task<ThemeResp> GetThemes(ThemeReq req)
     {
-        var query = db.Themes
+        var query = db.Themes.AsNoTracking()
             .Where(x => !x.IsDeleted)
             .Where(x => req.Name == null || x.Name.ToLower().Contains(req.Name.ToLower()));
 

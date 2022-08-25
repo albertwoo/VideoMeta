@@ -15,15 +15,14 @@ public static class DbDevSeeding
         {
             var theme = new Theme
             {
-                Name = "Star war"
+                Name = "Friends"
             };
-
             db.Themes.Add(theme);
 
             db.VideoMetas.Add(new VideoMeta
             {
                 ThemeId = theme.Id,
-                Title = "Earth war"
+                Title = "Best memory with friends"
             });
 
             db.SaveChanges();
