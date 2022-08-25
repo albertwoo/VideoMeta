@@ -1,4 +1,4 @@
-# VideoServices
+# Video meta processing solution for demo
 
 This is a demo solution project.
 
