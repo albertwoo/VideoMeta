@@ -22,6 +22,7 @@ public record VideoMetaResp(
 
 public record VideoMetaItem(
     Guid Id,
+    string Url,
     string Title,
     string Description,
     bool IsReady,
@@ -32,6 +33,7 @@ public record VideoMetaItem(
 {
     public VideoMetaItem(Data.VideoMeta x) : this(
         x.Id,
+        x.Url,
         x.Title,
         x.Description,
         x.IsReady,

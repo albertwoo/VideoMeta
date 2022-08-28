@@ -114,6 +114,7 @@ public class VideoMetaService : IVideoMetaService
             meta.ThemeId = evt.ThemeId.Value;
         }
 
+        meta.Url = evt.Url;
         meta.Title = evt.Title;
         meta.Description = evt.Description;
         meta.IsDeleted = false;

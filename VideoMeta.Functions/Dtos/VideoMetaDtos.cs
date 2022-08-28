@@ -4,6 +4,7 @@ public record VideoMetaEvent(
     Guid Id,
     VideoMetaEventType Type,
     Guid? ThemeId,
+    string? Url,
     string? Title,
     string? Description
 );
