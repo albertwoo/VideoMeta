@@ -33,7 +33,7 @@ public class VideoMetaService : IVideoMetaService
         {
             archiveThreshold = TimeSpan.FromDays(30);
         }
-        var targetDate = DateTime.Now - archiveThreshold;
+        var targetDate = DateTime.UtcNow - archiveThreshold;
 
         var page = 0;
         var pageSize = 50;
@@ -100,6 +100,8 @@ public class VideoMetaService : IVideoMetaService
         if (meta != null)
         {
             meta.IsDeleted = true;
+            meta.UpdatedTime = DateTime.UtcNow;
+
             await videoMetaDbContext.SaveChangesAsync();
         }
     }
@@ -118,14 +120,14 @@ public class VideoMetaService : IVideoMetaService
         meta.Title = evt.Title;
         meta.Description = evt.Description;
         meta.IsDeleted = false;
-        meta.UpdatedTime = DateTime.Now;
+        meta.UpdatedTime = DateTime.UtcNow;
         await videoMetaDbContext.SaveChangesAsync();
     }
 
     private async Task SetVideoReady(VideoMetaEvent evt)
     {
         var meta = await GetOrCreateVideoMeta(evt);
-        meta.UpdatedTime = DateTime.Now;
+        meta.UpdatedTime = DateTime.UtcNow;
         meta.IsReady = true;
         await videoMetaDbContext.SaveChangesAsync();
     }

@@ -51,6 +51,8 @@ public class ThemeService : IThemeService
         if (theme != null)
         {
             theme.IsDeleted = true;
+            theme.UpdatedTime = DateTime.UtcNow;
+
             await videoMetaDbContext.SaveChangesAsync();
         }
     }
@@ -69,7 +71,7 @@ public class ThemeService : IThemeService
         }
 
         theme.Name = evt.Name;
-        theme.UpdatedTime = DateTime.Now;
+        theme.UpdatedTime = DateTime.UtcNow;
         theme.IsDeleted = false;
 
         await videoMetaDbContext.SaveChangesAsync();
