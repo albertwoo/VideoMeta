@@ -1,13 +1,12 @@
-﻿namespace VideoMeta.Data
+﻿namespace VideoMeta.Data;
+
+public class Theme
 {
-    public class Theme
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; }
 
-        public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 
-        public bool IsDeleted { get; set; }
-    }
+    public bool IsDeleted { get; set; }
 }

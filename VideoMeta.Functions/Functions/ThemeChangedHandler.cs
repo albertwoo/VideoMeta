@@ -10,6 +10,8 @@ using VideoMeta.Functions.Services;
 
 public class ThemeChangedHandler
 {
+    private const string QueueName = "theme-changed";
+
     private readonly JsonSerializerOptions jsonOptions;
     private readonly IThemeService themeService;
 
@@ -23,20 +25,20 @@ public class ThemeChangedHandler
 
 
     [FunctionName("ThemeChangedHandler")]
-    public async Task Run([QueueTrigger("theme-changed")] string queueItem, ILogger log)
+    public async Task Run([QueueTrigger(QueueName)] string queueItem, ILogger log)
     {
         try
         {
-            log.LogInformation("Event received for theme-changed");
+            log.LogInformation("Event received for {}", QueueName);
             var evt = JsonSerializer.Deserialize<ThemeEvent>(queueItem, jsonOptions);
 
-            log.LogInformation("Event is processing for theme-changed");
+            log.LogInformation("Event is processing for {}", QueueName);
             await themeService.HandleEvent(evt);
-            log.LogInformation("Event is processed successful for theme-changed");
+            log.LogInformation("Event is processed successful for {}", QueueName);
         }
         catch (Exception ex)
         {
-            log.LogError(ex, "Event processing is failed for theme-changed");
+            log.LogError(ex, "Event processing is failed for {}", QueueName);
             throw;
         }
     }

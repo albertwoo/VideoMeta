@@ -2,10 +2,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Drawing.Printing;
 using VideoMeta.Data;
 using VideoMeta.Functions.Dtos;
-using Z.EntityFramework.Plus;
 
 
 public interface IVideoMetaService
@@ -139,16 +137,18 @@ public class VideoMetaService : IVideoMetaService
         meta.Url = evt.Url;
         meta.Title = evt.Title;
         meta.Description = evt.Description;
-        meta.IsDeleted = false;
         meta.UpdatedTime = DateTime.UtcNow;
+
         await videoMetaDbContext.SaveChangesAsync();
     }
 
     private async Task SetVideoReady(VideoMetaEvent evt)
     {
         var meta = await GetOrCreateVideoMeta(evt);
+
         meta.UpdatedTime = DateTime.UtcNow;
         meta.IsReady = true;
+
         await videoMetaDbContext.SaveChangesAsync();
     }
 }

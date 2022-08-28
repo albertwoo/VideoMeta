@@ -10,6 +10,8 @@ using VideoMeta.Functions.Services;
 
 public class VideoMetaChangedHandler
 {
+    private const string QueueName = "video-meta-changed";
+
     private readonly JsonSerializerOptions jsonOptions;
     private readonly IVideoMetaService videoMetaService;
 
@@ -23,20 +25,20 @@ public class VideoMetaChangedHandler
 
 
     [FunctionName("VideoMetaChangedHandler")]
-    public async Task Run([QueueTrigger("video-meta-changed")] string queueItem, ILogger log)
+    public async Task Run([QueueTrigger(QueueName)] string queueItem, ILogger log)
     {
         try
         {
-            log.LogInformation("Event received for video-meta-changed");
+            log.LogInformation("Event received for {}", QueueName);
             var evt = JsonSerializer.Deserialize<VideoMetaEvent>(queueItem, jsonOptions);
 
-            log.LogInformation("Event is processing for video-meta-changed");
+            log.LogInformation("Event is processing for {}", QueueName);
             await videoMetaService.HandleEvent(evt);
-            log.LogInformation("Event is processed successful for video-meta-changed");
+            log.LogInformation("Event is processed successful for {}", QueueName);
         }
         catch (Exception ex)
         {
-            log.LogError(ex, "Event processing is failed for video-meta-changed");
+            log.LogError(ex, "Event processing is failed for {}", QueueName);
             throw;
         }
     }
