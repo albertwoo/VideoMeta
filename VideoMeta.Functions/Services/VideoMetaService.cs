@@ -65,6 +65,10 @@ public class VideoMetaService : IVideoMetaService
                 await SoftDeleteVideoMeta(evt);
                 break;
 
+            case VideoMetaEventType.RECOVER:
+                await RecoverSoftDeleteVideoMeta(evt);
+                break;
+
             case VideoMetaEventType.PROCESSED:
                 await SetVideoReady(evt);
                 break;
@@ -106,6 +110,22 @@ public class VideoMetaService : IVideoMetaService
         }
     }
 
+    private async Task RecoverSoftDeleteVideoMeta(VideoMetaEvent evt)
+    {
+        var meta = videoMetaDbContext.VideoMetas.FirstOrDefault(x => x.Id == evt.Id);
+
+        if (meta != null)
+        {
+            meta.IsDeleted = false;
+            meta.UpdatedTime = DateTime.UtcNow;
+
+            await videoMetaDbContext.SaveChangesAsync();
+        }
+        else
+        {
+            logger.LogWarning("Revocer failed because video ({}) is not found", evt.Id);
+        }
+    }
 
     private async Task CreateOrUpdateVideoMeta(VideoMetaEvent evt)
     {

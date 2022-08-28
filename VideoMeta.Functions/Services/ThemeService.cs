@@ -37,6 +37,10 @@ public class ThemeService : IThemeService
                 await SoftDeleteTheme(evt);
                 break;
 
+            case ThemeEventType.RECOVER:
+                await RecoverSoftDeleteTheme(evt);
+                break;
+
             default:
                 var msg = $"Not supported theme event type: {evt.Type}";
                 logger.LogError(msg);
@@ -57,6 +61,22 @@ public class ThemeService : IThemeService
         }
     }
 
+    private async Task RecoverSoftDeleteTheme(ThemeEvent evt)
+    {
+        var theme = await videoMetaDbContext.Themes.FirstOrDefaultAsync(x => x.Id == evt.Id);
+        if (theme != null)
+        {
+            theme.IsDeleted = false;
+            theme.UpdatedTime = DateTime.UtcNow;
+
+            await videoMetaDbContext.SaveChangesAsync();
+        }
+        else
+        {
+            logger.LogWarning("Revocer failed because theme ({}) is not found", evt.Id);
+        }
+    }
+
     private async Task UpdateOrCreateTheme(ThemeEvent evt)
     {
         var theme = await videoMetaDbContext.Themes.FirstOrDefaultAsync(x => x.Id == evt.Id);
@@ -72,7 +92,6 @@ public class ThemeService : IThemeService
 
         theme.Name = evt.Name;
         theme.UpdatedTime = DateTime.UtcNow;
-        theme.IsDeleted = false;
 
         await videoMetaDbContext.SaveChangesAsync();
     }

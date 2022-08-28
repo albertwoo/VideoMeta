@@ -14,5 +14,6 @@ public enum VideoMetaEventType
     CREATED,
     UPDATED,
     DELETED,
+    RECOVER,
     PROCESSED
 }
