@@ -23,9 +23,15 @@ public class ThemeChangedHandler
         this.themeService = themeService;
     }
 
-
+    /// <summary>
+    /// IsSessionsEnabled to true, so we can set viddeo ID as the sessionId to make sure we handle event in a same instance of Azure function
+    /// To ensure we process the event in order
+    /// </summary>
+    /// <param name="queueItem"></param>
+    /// <param name="log"></param>
+    /// <returns></returns>
     [FunctionName("ThemeChangedHandler")]
-    public async Task Run([QueueTrigger(QueueName)] string queueItem, ILogger log)
+    public async Task Run([ServiceBusTrigger(QueueName, IsSessionsEnabled = true)] string queueItem, ILogger log)
     {
         try
         {
